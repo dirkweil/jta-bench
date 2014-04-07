@@ -12,9 +12,9 @@ public class PersonPresenter
   PersonBench  personBench;
 
   int          rampUpCount = 5;
-  int          benchCount  = 100;
+  int          benchCount  = 20;
   int          benchSize   = 100;
-  int          chunkSize   = 20;
+  int          chunkSize   = 100;
 
   private long millis;
 
