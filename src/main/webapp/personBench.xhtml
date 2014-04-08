@@ -11,16 +11,16 @@
       <h:outputLabel for="benchCount" value="Bench Count: " />
       <h:inputText value="#{personPresenter.benchCount}" id="benchCount" />
 
-      <h:outputLabel for="benchSize" value="Bench Size: " />
-      <h:inputText value="#{personPresenter.benchSize}" id="benchSize" />
+      <h:outputLabel for="insertCount" value="Insert Count: " />
+      <h:inputText value="#{personPresenter.insertCount}" id="insertCount" />
 
-      <h:outputLabel for="chunkSize" value="Chunk Size: " />
-      <h:inputText value="#{personPresenter.chunkSize}" id="chunkSize" />
+      <h:outputLabel for="insertsPerTx" value="Inserts/TX: " />
+      <h:inputText value="#{personPresenter.insertsPerTx}" id="insertsPerTx" />
       
       <h:panelGroup/>
       <h:commandButton action="#{personPresenter.doBench()}" value="Go!" />
 
-      <h:outputLabel for="millis" value="Millis: " />
+      <h:outputLabel for="millis" value="Millis/Bench: " />
       <h:outputText value="#{personPresenter.millis}" id="millis" />
     </h:panelGrid>
   </h:form>

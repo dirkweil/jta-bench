@@ -11,10 +11,11 @@ public class PersonPresenter
   @Inject
   PersonBench  personBench;
 
-  int          rampUpCount = 5;
-  int          benchCount  = 20;
-  int          benchSize   = 100;
-  int          chunkSize   = 100;
+  int          rampUpCount  = 5;
+  int          benchCount   = 20;
+
+  int          insertCount  = 1000;
+  int          insertsPerTx = 1;
 
   private long millis;
 
@@ -38,24 +39,24 @@ public class PersonPresenter
     this.benchCount = retries;
   }
 
-  public int getBenchSize()
+  public int getInsertCount()
   {
-    return this.benchSize;
+    return this.insertCount;
   }
 
-  public void setBenchSize(int benchSize)
+  public void setInsertCount(int benchSize)
   {
-    this.benchSize = benchSize;
+    this.insertCount = benchSize;
   }
 
-  public int getChunkSize()
+  public int getInsertsPerTx()
   {
-    return this.chunkSize;
+    return this.insertsPerTx;
   }
 
-  public void setChunkSize(int chunkSize)
+  public void setInsertsPerTx(int chunkSize)
   {
-    this.chunkSize = chunkSize;
+    this.insertsPerTx = chunkSize;
   }
 
   public long getMillis()
@@ -67,13 +68,13 @@ public class PersonPresenter
   {
     for (int i = 0; i < this.rampUpCount; ++i)
     {
-      this.personBench.doBench(this.benchSize, this.chunkSize);
+      this.personBench.doBench(this.insertCount, this.insertsPerTx);
     }
 
     long m = 0;
     for (int i = 0; i < this.benchCount; ++i)
     {
-      m += this.personBench.doBench(this.benchSize, this.chunkSize);
+      m += this.personBench.doBench(this.insertCount, this.insertsPerTx);
     }
     this.millis = m / this.benchCount;
   }

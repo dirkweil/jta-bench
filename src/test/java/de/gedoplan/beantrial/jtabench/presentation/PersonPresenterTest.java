@@ -45,13 +45,16 @@ public class PersonPresenterTest
   @Test
   public void testDoBench()
   {
+    this.personPresenter.setInsertCount(1000);
+    this.personPresenter.setInsertsPerTx(1);
+
     System.out.println("RampUp Count: " + this.personPresenter.getRampUpCount());
     System.out.println("Bench Count: " + this.personPresenter.getBenchCount());
-    System.out.println("Bench Size: " + this.personPresenter.getBenchSize());
-    System.out.println("Chunk Size: " + this.personPresenter.getChunkSize());
+    System.out.println("Insert Count: " + this.personPresenter.getInsertCount());
+    System.out.println("Inserts/TX: " + this.personPresenter.getInsertsPerTx());
 
     this.personPresenter.doBench();
 
-    System.out.println("Millis: " + this.personPresenter.getMillis());
+    System.out.println("Millis/Bench: " + this.personPresenter.getMillis());
   }
 }

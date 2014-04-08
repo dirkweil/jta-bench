@@ -12,18 +12,24 @@ public class PersonBench
   @Inject
   PersonChunk      personChunk;
 
-  public long doBench(int benchSize, int chunkSize)
+  public long doBench(int insertCount, int insertsPerTx)
   {
     this.personRepository.purge();
 
     long start = System.currentTimeMillis();
 
-    for (int i = 0; i < benchSize; ++i)
+    while (insertCount > 0)
     {
-      this.personChunk.createPersonen(chunkSize);
+      int count = insertsPerTx;
+      if (count > insertCount)
+      {
+        count = insertCount;
+      }
+
+      this.personChunk.createPersonen(count);
+      insertCount -= count;
     }
 
     return System.currentTimeMillis() - start;
   }
-
 }
