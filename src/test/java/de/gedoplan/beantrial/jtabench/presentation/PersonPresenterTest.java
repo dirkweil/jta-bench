@@ -45,8 +45,10 @@ public class PersonPresenterTest
   @Test
   public void testDoBench()
   {
-    this.personPresenter.setInsertCount(1000);
-    this.personPresenter.setInsertsPerTx(1);
+//    this.personPresenter.setRampUpCount(50);
+//    this.personPresenter.setBenchCount(200);
+//    this.personPresenter.setInsertCount(1000);
+//    this.personPresenter.setInsertsPerTx(4);
 
     System.out.println("RampUp Count: " + this.personPresenter.getRampUpCount());
     System.out.println("Bench Count: " + this.personPresenter.getBenchCount());

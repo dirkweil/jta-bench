@@ -11,11 +11,11 @@ public class PersonPresenter
   @Inject
   PersonBench  personBench;
 
-  int          rampUpCount  = 5;
-  int          benchCount   = 20;
+  int          rampUpCount  = 50;
+  int          benchCount   = 200;
 
   int          insertCount  = 1000;
-  int          insertsPerTx = 1;
+  int          insertsPerTx = 4;
 
   private long millis;
 

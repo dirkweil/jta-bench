@@ -51,13 +51,14 @@
       <groupId>org.apache.deltaspike.core</groupId>
       <artifactId>deltaspike-core-api</artifactId>
       <version>${deltaspike.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.deltaspike.core</groupId>
       <artifactId>deltaspike-core-impl</artifactId>
       <version>${deltaspike.version}</version>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
