@@ -1,28 +1,33 @@
-package de.gedoplan.beantrial.jtabench.presentation;
+package de.gedoplan.beantrial.jtabench.service;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class PersonPresenterTest
+public class BuchungBenchmarkServiceTest
 {
   private static CdiContainer cdiContainer;
 
   @BeforeClass
   public static void beforeClass()
   {
+    System.setProperty("java.util.logging.config.file", "jul.properties");
+
     // CDI-Container starten
     cdiContainer = CdiContainerLoader.getCdiContainer();
     cdiContainer.boot();
 
-    // Standard-Kontexte starten
-    cdiContainer.getContextControl().startContexts();
+    // Application-Kontext starten
+    cdiContainer.getContextControl().startContext(ApplicationScoped.class);
   }
 
   @AfterClass
@@ -37,26 +42,24 @@ public class PersonPresenterTest
   {
     // Injektionen in this ausführen
     BeanProvider.injectFields(this);
+
+    // Request-Kontext starten
+    cdiContainer.getContextControl().startContext(RequestScoped.class);
+  }
+
+  @After
+  public void after()
+  {
+    // Request-Kontext stoppen
+    cdiContainer.getContextControl().stopContext(RequestScoped.class);
   }
 
   @Inject
-  PersonPresenter personPresenter;
+  BuchungBenchmarkService buchungBenchmarkService;
 
   @Test
   public void testDoBench()
   {
-//    this.personPresenter.setRampUpCount(50);
-//    this.personPresenter.setBenchCount(200);
-//    this.personPresenter.setInsertCount(1000);
-//    this.personPresenter.setInsertsPerTx(4);
-
-    System.out.println("RampUp Count: " + this.personPresenter.getRampUpCount());
-    System.out.println("Bench Count: " + this.personPresenter.getBenchCount());
-    System.out.println("Insert Count: " + this.personPresenter.getInsertCount());
-    System.out.println("Inserts/TX: " + this.personPresenter.getInsertsPerTx());
-
-    this.personPresenter.doBench();
-
-    System.out.println("Millis/Bench: " + this.personPresenter.getMillis());
+    this.buchungBenchmarkService.run();
   }
 }

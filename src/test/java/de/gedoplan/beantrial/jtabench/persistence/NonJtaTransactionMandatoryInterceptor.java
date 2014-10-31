@@ -6,12 +6,14 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+import javax.transaction.TransactionRequiredException;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 @Interceptor
 @Priority(Interceptor.Priority.APPLICATION + 1)
-@Transactional
-public class NonJtaTransactionInterceptor
+@Transactional(TxType.MANDATORY)
+public class NonJtaTransactionMandatoryInterceptor
 {
   @Inject
   EntityManager entityManager;
@@ -19,24 +21,12 @@ public class NonJtaTransactionInterceptor
   @AroundInvoke
   Object manageTransaction(InvocationContext invocationContext) throws Exception
   {
-    if (this.entityManager.getTransaction().isActive())
+    if (!this.entityManager.getTransaction().isActive())
     {
-      return invocationContext.proceed();
+      throw new TransactionRequiredException();
     }
 
-    this.entityManager.getTransaction().begin();
-
-    try
-    {
-      Object result = invocationContext.proceed();
-      this.entityManager.getTransaction().commit();
-      return result;
-    }
-    catch (Exception exception)
-    {
-      this.entityManager.getTransaction().rollback();
-      throw exception;
-    }
+    return invocationContext.proceed();
   }
 
 }

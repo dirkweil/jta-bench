@@ -4,16 +4,17 @@
   <persistence-unit name="nonjta">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     
-    <class>de.gedoplan.beantrial.jtabench.entity.Person</class>
+    <class>de.gedoplan.beantrial.jtabench.entity.Buchung</class>
+    <class>de.gedoplan.beantrial.jtabench.entity.Konto</class>
 
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 
     <properties>
       <!-- Connection-Parameter -->
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
-      <property name="javax.persistence.jdbc.user" value="test"/>
-      <property name="javax.persistence.jdbc.password" value="test"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:h2:~/h2/beantrial;AUTO_SERVER=TRUE"/>
+      <property name="javax.persistence.jdbc.user" value="beantrial"/>
+      <property name="javax.persistence.jdbc.password" value="beantrial"/>
 
       <!-- Auswahl des DB-Dialektes -->
       <property name="eclipselink.target-database" value="Auto" />
@@ -39,6 +40,9 @@
 
       <!-- Hibernate: Use new id generator -->
       <property name="hibernate.id.new_generator_mappings" value="true" />
+      
+      <!-- Hibernate: Connection pool -->
+      <property name="hibernate.c3p0.max_size" value="20" />
     </properties>
   </persistence-unit>
 </persistence>

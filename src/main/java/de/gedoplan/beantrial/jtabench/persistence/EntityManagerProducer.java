@@ -9,6 +9,12 @@ import javax.persistence.PersistenceContext;
 public class EntityManagerProducer
 {
   @PersistenceContext(unitName = "jta")
-  @Produces
   EntityManager entityManager;
+
+  @Produces
+  public EntityManager getEntityManager()
+  {
+    return this.entityManager;
+  }
+
 }
