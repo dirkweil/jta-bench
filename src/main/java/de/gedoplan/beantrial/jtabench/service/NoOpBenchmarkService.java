@@ -4,9 +4,7 @@ import de.gedoplan.beantrial.jtabench.entity.Konto;
 import de.gedoplan.beantrial.jtabench.persistence.BuchungRepository;
 import de.gedoplan.beantrial.jtabench.persistence.KontoRepository;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Map.Entry;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,21 +14,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 @ApplicationScoped
-public class BuchungBenchmarkService
+public class NoOpBenchmarkService
 {
-  private int                       rampupCount = 100;
-  private int                       sampleCount = 10000;
+  private int                       rampupCount = 1000;
+  private int                       sampleCount = 100000;
 
   @Inject
   KontoRepository                   kontoRepository;
   @Inject
   BuchungRepository                 buchungRepository;
   @Inject
-  BuchungSampleService              buchungSampleService;
+  NoOpSampleService                 noOpSampleService;
   @Inject
   EntityManager                     entityManager;
 
-  private static final Log          LOG         = LogFactory.getLog(BuchungBenchmarkService.class);
+  private static final Log          LOG         = LogFactory.getLog(NoOpBenchmarkService.class);
   private static final NumberFormat FORMAT      = NumberFormat.getIntegerInstance();
 
   public void run()
@@ -39,7 +37,7 @@ public class BuchungBenchmarkService
     // Mit leerem Datenbestand starten
     this.buchungRepository.purge();
     this.kontoRepository.purge();
-    this.buchungSampleService.getSaldoMap().clear();
+    this.noOpSampleService.clearSuccessfulCount();
     this.entityManager.clear();
 
     // Warmlaufen
@@ -47,7 +45,7 @@ public class BuchungBenchmarkService
     {
       try
       {
-        this.buchungSampleService.createSampleBuchung();
+        this.noOpSampleService.doSomething();
       }
       catch (SampleFailedException e)
       {
@@ -61,7 +59,7 @@ public class BuchungBenchmarkService
     {
       try
       {
-        this.buchungSampleService.createSampleBuchung();
+        this.noOpSampleService.doSomething();
       }
       catch (SampleFailedException e)
       {
@@ -77,25 +75,12 @@ public class BuchungBenchmarkService
     LOG.info(FORMAT.format(usedNanos) + " ns used ");
     LOG.info(FORMAT.format(usedNanosPerSample) + " ns used per sample");
 
-    // Testen
-    for (Entry<Integer, BigDecimal> entry : this.buchungSampleService.getSaldoMap().entrySet())
+    // Test
+    Number saldo0 = (Number) this.entityManager.createNativeQuery("select SALDO from " + Konto.TABLE_NAME + " where ID=0").getSingleResult();
+    if (saldo0.doubleValue() != this.noOpSampleService.getSuccessfulCount())
     {
-      int kontoId = entry.getKey();
-      BigDecimal sollSaldo = entry.getValue();
-
-      Konto konto = this.kontoRepository.findById(kontoId);
-      if (konto == null)
-      {
-        LOG.error("Konto " + kontoId + " fehlt in der DB");
-      }
-      else
-      {
-        BigDecimal istSaldo = konto.getSaldo();
-        if (istSaldo.compareTo(sollSaldo) != 0)
-        {
-          LOG.error("Konto " + kontoId + " hat falschen Saldo (Soll=" + sollSaldo + ", Ist=" + istSaldo + ")");
-        }
-      }
+      LOG.error("Konto 0 hat falschen Saldo (Ist=" + saldo0 + ", Soll=" + this.noOpSampleService.getSuccessfulCount() + ")");
     }
+
   }
 }

@@ -50,7 +50,7 @@ public class BuchungSampleService
     boolean fail = this.random.nextInt(100) < FAIL_PERCENT;
     if (fail)
     {
-      throw new BuchungFailedException();
+      throw new SampleFailedException();
     }
 
     BigDecimal saldo = this.saldoMap.get(kontoId);
